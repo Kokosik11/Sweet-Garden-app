@@ -1,0 +1,44 @@
+version: "3"
+services:
+    sweetgarden_front:
+        container_name: sweetgarden_front
+        build:
+          context: ./sweetgarden_front
+          dockerfile: Dockerfile
+        volumes:
+          - ./sweetgarden_front/src:/sweetgarden_front/src
+          - ./sweetgarden_front/public:/sweetgarden_front/public
+        restart: always
+        ports:
+          - 3000:3000
+        links:
+          - mongo
+        networks:
+          - sweetgarden_network
+    sweetgarden_back:
+        container_name: sweetgarden_back
+        build:
+          context: ./sweetgarden_back
+          dockerfile: Dockerfile
+        volumes:
+          - ./sweetgarden_back/src:/sweetgarden_back/src
+        restart: always
+        ports:
+          - 8000:8000
+        links:
+          - mongo
+        networks:
+          - sweetgarden_network
+    mongo:
+        container_name: mongo
+        image: mongo
+        volumes:
+          - ./data:/data/db
+        ports:
+          - '27017:27017'
+        networks:
+          - sweetgarden_network
+
+networks:
+        sweetgarden_network:
+          external: true
